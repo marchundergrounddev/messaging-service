@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="MES-SERV-1" author="shoegazelad@gmail.com">
+        <createTable tableName="message" schemaName="public">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="recipient" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subject" type="varchar(50)"/>
+            <column name="text" type="varchar(250)"/>
+            <column name="sent_at" type="timestamp"/>
+            <column name="delivered_at" type="timestamp"/>
+            <column name="failed_at" type="timestamp"/>
+            <column name="status" type="varchar(20)"/>
+            <column name="type" type="varchar(20)"/>
+        </createTable>
+
+        <createTable tableName="ccs" schemaName="public">
+            <column name="message_id" type="bigint" autoIncrement="false"/>
+            <column name="cc_name" type="varchar(50)"/>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="ccs"
+                baseColumnNames="message_id"
+                constraintName="fk_ccs_message_id"
+                referencedTableName="message"
+                referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

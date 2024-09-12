@@ -1,0 +1,24 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: MESSAGING-SERVICE
+  datasource:
+    url: jdbc:postgresql://localhost:5432/message-db?stringtype=unspecified
+    username: postgres
+    password: 1234
+  liquibase:
+    change-log: db.changelog/changelog.xml
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: true
+    properties:
+      jakarta:
+        persistence:
+          sharedCache:
+            mode: UNSPECIFIED
+logging:
+  level:
+    root: info
+    com.vladputnikov.messaging_service: debug

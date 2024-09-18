@@ -4,7 +4,6 @@ import com.vladputnikov.messaging_service.persistent.model.Message;
 import com.vladputnikov.messaging_service.persistent.util.MessageStatus;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public interface NotificationService {
 

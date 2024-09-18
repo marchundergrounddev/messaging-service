@@ -8,11 +8,13 @@ import java.util.concurrent.CompletableFuture;
 
 public interface NotificationService {
 
-    CompletableFuture<Void> sendMessage(Message message);
+    void sendMessage(Message message);
 
     Message getMessageById(Long id);
 
     List<Message> getAllMessagesBySubject(String subject);
 
     MessageStatus getMessageStatusById(Long id);
+
+    void updateMessageStatus(MessageStatus status, Message message);
 }

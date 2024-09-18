@@ -4,7 +4,6 @@ import lombok.Getter;
 
 @Getter
 public enum MessageStatus {
-    QUEUED,
     PENDING,
     SUCCESSFUL,
     FAILED

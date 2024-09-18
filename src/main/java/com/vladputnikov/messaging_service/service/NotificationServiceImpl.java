@@ -4,15 +4,13 @@ import com.vladputnikov.messaging_service.api.exception.MessageNotFoundException
 import com.vladputnikov.messaging_service.persistent.model.Message;
 import com.vladputnikov.messaging_service.persistent.repository.MessageRepository;
 import com.vladputnikov.messaging_service.persistent.util.MessageStatus;
-import lombok.AllArgsConstructor;
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.Map;
+import java.util.function.Consumer;
 
 @Service
 public class NotificationServiceImpl implements NotificationService {
@@ -25,12 +23,9 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    @Async
-    public CompletableFuture<Void> sendMessage(Message message) {
+    public void sendMessage(Message message) {
         System.out.println("Basic message sending logic");
-        return CompletableFuture.runAsync(() ->
-                repository.save(message)
-                );
+        repository.save(message);
     }
 
     @Override
@@ -52,5 +47,18 @@ public class NotificationServiceImpl implements NotificationService {
         return repository.getMessageStatusById(id).orElseThrow(
                 () -> new MessageNotFoundException(String.format("Message not found by this id: %d ", id))
         );
+    }
+
+    @Override
+    @Transactional
+    public void updateMessageStatus(MessageStatus status, Message message) {
+        Map<MessageStatus, Consumer<Message>> map = Map.of(
+                MessageStatus.PENDING, m -> {},
+                MessageStatus.FAILED, m -> message.setMessageFailedAt(LocalDateTime.now()),
+                MessageStatus.SUCCESSFUL, m -> message.setMessageDeliveredAt(LocalDateTime.now()));
+
+        message.setMessageStatus(status);
+        map.getOrDefault(status, m -> {}).accept(message);
+        repository.save(message);
     }
 }

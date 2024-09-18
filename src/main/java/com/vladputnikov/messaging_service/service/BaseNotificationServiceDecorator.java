@@ -2,14 +2,11 @@ package com.vladputnikov.messaging_service.service;
 
 import com.vladputnikov.messaging_service.persistent.model.Message;
 import com.vladputnikov.messaging_service.persistent.util.MessageStatus;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @Slf4j
-@Setter
 public class BaseNotificationServiceDecorator implements NotificationService {
 
     private final NotificationService service;
@@ -19,9 +16,9 @@ public class BaseNotificationServiceDecorator implements NotificationService {
     }
 
     @Override
-    public CompletableFuture<Void> sendMessage(Message message) {
+    public void sendMessage(Message message) {
         log.info("Sending a message");
-        return service.sendMessage(message);
+        service.sendMessage(message);
     }
 
     @Override
@@ -38,4 +35,11 @@ public class BaseNotificationServiceDecorator implements NotificationService {
     public MessageStatus getMessageStatusById(Long id) {
         return service.getMessageStatusById(id);
     }
+
+    @Override
+    public void updateMessageStatus(MessageStatus status, Message message) {
+        service.updateMessageStatus(status, message);
+    }
+
+
 }
